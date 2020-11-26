@@ -1,8 +1,13 @@
 /* for bar chart */
+.form {
+    margin-bottom: 1%;
+}
+
 
 table {
     width: 75%;
     height: 95%;
+    border: 5px solid rgb(172, 23, 55);
 }
 
 tr {
@@ -14,46 +19,52 @@ tr {
     
 }
 
+
+td {
+}
+
+.DataRow {
+}
+
 /* .dataBar:hover {
     width: 100%;
     height: 100%;
   } */
 
 .BarChartContainer {
-    background-color: #4b5763;
+    background-color: white;
     width: 50%;
-    border: 5px solid rgb(172, 23, 55);
+    /* border: 5px solid rgb(172, 23, 55); */
     border-radius: 15px 50px 30px 5px;
-    margin: 10px;
-   
+    margin: 30px;
 }
 
 
 /* for pie chart */
 
 .PieChartContainer {
-    background-color: #34495E;
+    background-color: white;
     width: 50%;
     border: 5px solid black;
-    margin: 10px;
+    margin: 30px;
 }
 
 .PieChart {
     width: 100%;
-    height: 100%;
+    height: 95%;
 }
 
 
 /* for line chart */
 
 .LineChartContainer {
-    background-color: #34495E;
+    background-color: white;
     width: 50%;
     border: 5px solid black;
-    margin: 10px;
+    margin: 30px;
 }
 
 .lineChart {
     width: 100%;
-    height: 100%;
+    height: 90%;
 }

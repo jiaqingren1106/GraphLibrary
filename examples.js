@@ -1,5 +1,8 @@
 "use strict";
 
+
+
+const body = document.querySelector("body")
 // BarChart demonstration
 const graph = new BarChart()
 graph.addForm();
@@ -58,6 +61,8 @@ console.log(pieGraph.colors)
 
 // line Chart demonstration
 const lineGraphA = new LineChart()
+lineGraphA.addForm();
+
 lineGraphA.addData(10, 0);
 lineGraphA.addData(1, 2);
 lineGraphA.addData(4, 6);

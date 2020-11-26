@@ -3,27 +3,27 @@ let graphID = 0;
 let graphArray = [];
 
 
-function searchGraph(id) {
-    return graphArray.find((graph)=> {return graph.ID == id;});
-}
-
-
-
 function colorGenerator(colorArray) {
     let code = "0123456789ABCDEF"
-
     while (true) {
         let color = "#";
-        for (let i = 0; i< 6; i++) {
+        for (let i = 0; i < 6; i++) {
             let char = code[Math.floor(Math.random() * 16)]
             color += char;
         }
         if (colorArray.includes(color) === false) {
             return color;
         }
-    
+
     }
 }
+
+
+function searchGraph(id) {
+    return graphArray.find((graph) => { return graph.ID == id; });
+}
+
+
 
 
 
@@ -74,7 +74,7 @@ function BarChart() {
 
 BarChart.prototype = {
 
-    addData: function(amount, category) {
+    addData: function (amount, category) {
         let i = 0;
         let found = false;
         for (i = 0; i < this.data.length; i++) {
@@ -97,26 +97,31 @@ BarChart.prototype = {
         }
     },
 
-    render: function() {
+    render: function () {
         let total = this.sum();
         const barChart = document.getElementById(this.ID).getElementsByClassName("DataRow")[0];
         let ratio = this.ratio();
         for (let i = 0; i < this.data.length; i++) {
-            let percentage = Math.floor(this.data[i].number/total * 100) + "%";
+            let percentage = Math.floor(this.data[i].number / total * 100) + "%";
+            const percent = document.createElement('div');
+            percent.textContent = percentage;
+
             const columnBar = document.createElement('td');
-            columnBar.textContent = percentage;
             const content = document.createElement('div');
             content.className = "dataBar";
             content.style.height = String(this.data[i].number * ratio) + "px";
-    
             content.style.backgroundColor = this.data[i].color;
             content.style.border = "1px solid black";
+            columnBar.appendChild(percent);
             columnBar.appendChild(content);
             barChart.appendChild(columnBar);
+            columnBar.addEventListener('mouseenter', this.mouseOnBar);
+            columnBar.addEventListener('mouseleave', this.mouseLeaveBar);
+
         }
     },
 
-    max: function() {
+    max: function () {
         let max = 0
 
         for (let i = 0; i < this.data.length; i++) {
@@ -127,16 +132,16 @@ BarChart.prototype = {
         return max;
     },
 
-    ratio: function() {
+    ratio: function () {
         const max = this.max();
         const tableHeight = parseInt(document.getElementById(this.ID).style.height, 10);
 
         let ratio = 1;
-        ratio = (tableHeight/1.4) / max;
+        ratio = (tableHeight / 1.4) / max;
         return ratio;
     },
 
-    sum: function() {
+    sum: function () {
         let sum = 0
         for (let i = 0; i < this.data.length; i++) {
             sum += this.data[i].number;
@@ -145,8 +150,8 @@ BarChart.prototype = {
     },
 
 
-    addForm: function(){
-     
+    addForm: function () {
+
         const formContainer = document.createElement('form');
         formContainer.id = this.ID;
         formContainer.className = "form";
@@ -175,7 +180,7 @@ BarChart.prototype = {
 
     },
 
-    addToBarChart: function(e) {
+    addToBarChart: function (e) {
         e.preventDefault();
         const barchart = document.getElementById(e.target.id);
         const category = e.target.getElementsByTagName("input")[0].value;
@@ -189,13 +194,44 @@ BarChart.prototype = {
     },
 
 
-    clear: function() {
+    clear: function () {
         const childArray = document.getElementById(this.ID).getElementsByClassName("DataRow")[0].childNodes;
         const count = childArray.length;
-        for (let i=0; i<count; i++) {
+        for (let i = 0; i < count; i++) {
             childArray[0].remove();
         }
     },
+
+    mouseOnBar: function (e) {
+        let deleteButton = document.createElement('button');
+        deleteButton.style.height = "15px";
+        deleteButton.style.width = "15px";
+        deleteButton.style.backgroundColor = "red";
+        deleteButton.style.padding = "0px"
+        deleteButton.style.border = "0px"
+
+
+        let image = document.createElement('img');
+        image.style.height = "15px";
+        image.style.width = "15px";
+        image.src = "image/delete.jpg"
+
+        e.target.prepend(deleteButton)
+        deleteButton.appendChild(image)
+
+    },
+
+    mouseLeaveBar: function (e) {
+        let buttom = document.getElementsByTagName("button")[0]
+        buttom.remove()
+    },
+
+    deletePress: function (e) {
+        let buttom = document.getElementsByTagName("button")[0]
+        buttom.remove()
+    },
+
+
 }
 
 
@@ -243,7 +279,7 @@ function PieChart() {
 
 PieChart.prototype = {
 
-    addData: function(amount, category) {
+    addData: function (amount, category) {
         let i = 0;
         let found = false;
         for (i = 0; i < this.data.length; i++) {
@@ -266,7 +302,7 @@ PieChart.prototype = {
         }
     },
 
-    render: function() {
+    render: function () {
         let sortedData = this.toRatio(this.data);
         const PieChart = document.getElementById(this.ID).getElementsByClassName("PieChart")[0].getContext("2d");
 
@@ -284,7 +320,7 @@ PieChart.prototype = {
         }
     },
 
-    sum: function() {
+    sum: function () {
         let sum = 0
 
         for (let i = 0; i < this.data.length; i++) {
@@ -294,15 +330,15 @@ PieChart.prototype = {
         return sum;
     },
 
-    toRatio: function() {
+    toRatio: function () {
         const sum = this.sum();
 
         let data = this.data.map((value) => { return { category: value.category, number: value.number / sum * 2 * Math.PI, color: value.color } });
         return data;
     },
 
-    addForm: function(){
-     
+    addForm: function () {
+
         const formContainer = document.createElement('form');
         formContainer.id = this.ID;
         formContainer.className = "form";
@@ -331,7 +367,7 @@ PieChart.prototype = {
 
     },
 
-    addToPieChart: function(e) {
+    addToPieChart: function (e) {
         e.preventDefault();
         const category = e.target.getElementsByTagName("input")[0].value;
         const value = e.target.getElementsByTagName("input")[1].value;
@@ -344,7 +380,7 @@ PieChart.prototype = {
     },
 
 
-    clear: function() {
+    clear: function () {
         const context = this.canvas.getContext('2d');
 
         context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -359,6 +395,7 @@ function LineChart() {
     this.ID = graphID;
     graphID++;
     this.chart = null;
+    this.canvas = null;
     this.data = [];
     this.x_axis = "x";
     this.y_axis = "y";
@@ -386,12 +423,13 @@ function LineChart() {
     body.appendChild(container);
 
     this.chart = container;
+    this.canvas = lineChart;
     graphArray.push(this);
 }
 
 LineChart.prototype = {
 
-    addData: function(x_value, y_value) {
+    addData: function (x_value, y_value) {
         let i = 0;
         let duplicate = false;
         for (i = 0; i < this.data.length; i++) {
@@ -410,7 +448,7 @@ LineChart.prototype = {
         }
     },
 
-    render: function() {
+    render: function () {
         let sortedData = this.sort();
         const lineChart = document.getElementById(this.ID).getElementsByClassName("lineChart")[0].getContext("2d");
         let ratio_x = this.ratio().ratio_x;
@@ -424,20 +462,20 @@ LineChart.prototype = {
 
             let xNext = sortedData[i + 1].x * ratio_x;
             let yNext = sortedData[i + 1].y * ratio_y;
-
+            lineChart.beginPath();
             lineChart.moveTo(x, canvasHeight - y);
-            lineChart.strokeStyle = 'aqua';
+            lineChart.strokeStyle = 'black';
             lineChart.lineWidth = 2;
             lineChart.lineTo(xNext, canvasHeight - yNext);
             lineChart.stroke();
         }
     },
 
-    sort: function() {
-        return this.data.sort(function(a, b) { return a.x - b.x });
+    sort: function () {
+        return this.data.sort(function (a, b) { return a.x - b.x });
     },
 
-    max_X_value: function() {
+    max_X_value: function () {
         let max = 0
 
         for (let i = 0; i < this.data.length; i++) {
@@ -449,7 +487,7 @@ LineChart.prototype = {
         return max;
     },
 
-    max_Y_value: function() {
+    max_Y_value: function () {
         let max = 0
 
         for (let i = 0; i < this.data.length; i++) {
@@ -461,7 +499,7 @@ LineChart.prototype = {
         return max;
     },
 
-    ratio: function() {
+    ratio: function () {
         const max_x = this.max_X_value();
         const max_y = this.max_Y_value();
 
@@ -469,63 +507,64 @@ LineChart.prototype = {
         const canvasWidth = parseInt(document.getElementById(this.ID).getElementsByClassName("lineChart")[0].width, 10);
 
 
-        let ratio_x = (canvasWidth - 10) / max_x;
-        let ratio_y = (canvasHeight - 10) / max_y;
+        let ratio_x = (canvasWidth / 1.1) / max_x;
+        let ratio_y = (canvasHeight / 1.4) / max_y;
 
         return {
             ratio_x: ratio_x,
             ratio_y: ratio_y
         };
     },
-}
 
 
+    addForm: function () {
+
+        const formContainer = document.createElement('form');
+        formContainer.id = this.ID;
+        formContainer.className = "form";
+
+        const inputA = document.createElement('input');
+        inputA.type = "number";
+        inputA.placeholder = "x";
+
+        const inputB = document.createElement('input');
+        inputB.type = "number";
+        inputB.placeholder = "y";
+
+        const inputSubmit = document.createElement('input');
+        inputSubmit.type = "submit";
+        inputSubmit.value = "ADD";
 
 
+        formContainer.appendChild(inputA);
+        formContainer.appendChild(inputB);
+        formContainer.appendChild(inputSubmit);
+
+        const linechart = document.getElementById(this.ID);
+        linechart.prepend(formContainer)
+
+        formContainer.addEventListener('submit', this.addToLineChart);
+
+    },
+
+    addToLineChart: function (e) {
+        e.preventDefault();
+        const x_value = e.target.getElementsByTagName("input")[0].value;
+        const y_value = e.target.getElementsByTagName("input")[1].value;
 
 
+        let graph = searchGraph(parseInt(e.target.id))
+        graph.clear();
+        graph.addData(parseFloat(x_value), parseFloat(y_value));
+        graph.render();
 
 
+    },
 
 
+    clear: function () {
+        const context = this.canvas.getContext('2d');
 
-function addToPieChart(book) {
-	// Add code here
-	const patron_list = document.querySelector('#patrons').getElementsByClassName('patron')
-	let target
-	for (let i = 0; i < patron_list.length; i++){
-		if (patron_list[i].querySelector('p').querySelector('span').textContent === book.patron.name) {
-			target = patron_list[i]
-		}
-	}
-	const targetbooklist = target.querySelector('tbody').getElementsByTagName('tr')
-	let remove
-	for (let j = 1; j < targetbooklist.length; j++){
-		if (parseInt(targetbooklist[j].querySelector('td').textContent) === book.bookId) {
-			targetbooklist[j].getElementsByTagName('td')[2].textContent = 'Overdue'
-			targetbooklist[j].getElementsByTagName('td')[2].className = 'red'
-		}
-	}
-}
-
-
-
-
-function addToLineChart(book) {
-	// Add code here
-	const patron_list = document.querySelector('#patrons').getElementsByClassName('patron')
-	let target
-	for (let i = 0; i < patron_list.length; i++){
-		if (patron_list[i].querySelector('p').querySelector('span').textContent === book.patron.name) {
-			target = patron_list[i]
-		}
-	}
-	const targetbooklist = target.querySelector('tbody').getElementsByTagName('tr')
-	let remove
-	for (let j = 1; j < targetbooklist.length; j++){
-		if (parseInt(targetbooklist[j].querySelector('td').textContent) === book.bookId) {
-			targetbooklist[j].getElementsByTagName('td')[2].textContent = 'Overdue'
-			targetbooklist[j].getElementsByTagName('td')[2].className = 'red'
-		}
-	}
+        context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    },
 }
