@@ -2,6 +2,8 @@
 
 // BarChart demonstration
 const graph = new BarChart()
+graph.addForm();
+
 graph.addData(4, "pear")
 graph.addData(4, "pear")
 graph.addData(2, "apple")
@@ -13,14 +15,14 @@ graph.render();
 
 
 
-const body = document.querySelector('body')
-const div = document.createElement("div")
-div.style.height = "300px";
-div.style.width = "300px";
-div.style.backgroundColor = "aqua";
-div.style.border = "10px solid black";
-div.style.margin = "10px";
-body.appendChild(div)
+// const body = document.querySelector('body')
+// const div = document.createElement("div")
+// div.style.height = "300px";
+// div.style.width = "300px";
+// div.style.backgroundColor = "aqua";
+// div.style.border = "10px solid black";
+// div.style.margin = "10px";
+// body.appendChild(div)
 
 
 
@@ -38,6 +40,8 @@ graphB.render();
 
 // Pie Chart demonstration
 const pieGraph = new PieChart()
+pieGraph.addForm();
+
 pieGraph.addData(4, "pear")
 pieGraph.addData(4, "pear")
 pieGraph.addData(2, "apple")
@@ -47,7 +51,7 @@ pieGraph.addData(10, "peach")
 pieGraph.addData(5, "mango")
 pieGraph.render();
 
-
+console.log(pieGraph.colors)
 
 
 
