@@ -238,8 +238,6 @@ BarChart.prototype = {
 
 
 
-
-
 function PieChart() {
     this.ID = graphID;
     graphID++;
