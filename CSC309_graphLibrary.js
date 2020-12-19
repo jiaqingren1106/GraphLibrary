@@ -1,6 +1,6 @@
 "use strict";
 
-(function(global, document, ) { 
+(function(global, document) { 
 
 let graphID = 0;
 let graphArray = [];
@@ -548,9 +548,7 @@ LineChart.prototype = {
         }
     },
 
-    render: function () {
-        console.log(document.getElementById(this.ID))
-    
+    render: function () {    
         this.clear();
 
         let sortedData = this.sort();
@@ -619,10 +617,7 @@ LineChart.prototype = {
             point.addEventListener('mouseenter', this.mouseOnBar);
             point.addEventListener('mouseleave', this.mouseLeaveBar);
             canvas.appendChild(point)
-        }
-       
-
-        console.log(this.data)
+        }   
     },
 
     sort: function () {
