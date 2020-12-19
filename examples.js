@@ -1,8 +1,7 @@
 "use strict";
-
-
-
 const body = document.querySelector("body")
+
+
 // BarChart demonstration
 const graph = new BarChart()
 graph.addForm();
@@ -14,6 +13,8 @@ graph.addData(5, "banana")
 graph.addData(7, "orange")
 graph.addData(10, "peach")
 graph.addData(5, "mango")
+
+
 graph.render();
 
 
@@ -30,6 +31,8 @@ graph.render();
 
 
 const graphB = new BarChart()
+
+
 graphB.addData(4, "pear")
 graphB.addData(4, "pear")
 graphB.addData(2, "apple")
@@ -52,9 +55,9 @@ pieGraph.addData(5, "banana")
 pieGraph.addData(7, "orange")
 pieGraph.addData(10, "peach")
 pieGraph.addData(5, "mango")
+
 pieGraph.render();
 
-console.log(pieGraph.colors)
 
 
 
@@ -63,14 +66,20 @@ console.log(pieGraph.colors)
 const lineGraphA = new LineChart()
 lineGraphA.addForm();
 
-lineGraphA.addData(10, 0);
+lineGraphA.addData(10, 4);
 lineGraphA.addData(1, 2);
 lineGraphA.addData(4, 6);
 lineGraphA.addData(2, 9);
 lineGraphA.addData(5, 10);
 lineGraphA.addData(7, 12);
-lineGraphA.addData(5, 8);
-lineGraphA.addData(5, 8);
-lineGraphA.addData(10, 0);
 
 lineGraphA.render();
+
+
+const lineGraphB = new LineChart()
+lineGraphB.addForm();
+lineGraphB.addData(10, 0);
+lineGraphB.addData(1, 2);
+lineGraphB.addData(4, 6);
+lineGraphB.addData(2, 9);
+lineGraphB.render();

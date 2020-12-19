@@ -1,4 +1,7 @@
 "use strict";
+
+(function(global, document, ) { 
+
 let graphID = 0;
 let graphArray = [];
 
@@ -14,7 +17,6 @@ function colorGenerator(colorArray) {
         if (colorArray.includes(color) === false) {
             return color;
         }
-
     }
 }
 
@@ -38,9 +40,7 @@ function BarChart() {
     this.colors = [];
 
     // reset to 0 in clear
-    this.total = 0;
-
-
+    // this.total = 0;
 
     const container = document.createElement('div');
     container.className = 'BarChartContainer';
@@ -98,8 +98,11 @@ BarChart.prototype = {
     },
 
     render: function () {
-        let total = this.sum();
         const barChart = document.getElementById(this.ID).getElementsByClassName("DataRow")[0];
+        this.clear();
+
+        // render here
+        let total = this.sum();
         let ratio = this.ratio();
         for (let i = 0; i < this.data.length; i++) {
             let percentage = Math.floor(this.data[i].number / total * 100) + "%";
@@ -107,7 +110,9 @@ BarChart.prototype = {
             percent.textContent = percentage;
 
             const columnBar = document.createElement('td');
+            columnBar.id = this.ID.toString(10) + i.toString(10)
             const content = document.createElement('div');
+            content.id = this.ID.toString(10) + i.toString(10)
             content.className = "dataBar";
             content.style.height = String(this.data[i].number * ratio) + "px";
             content.style.backgroundColor = this.data[i].color;
@@ -117,7 +122,16 @@ BarChart.prototype = {
             barChart.appendChild(columnBar);
             columnBar.addEventListener('mouseenter', this.mouseOnBar);
             columnBar.addEventListener('mouseleave', this.mouseLeaveBar);
+        }
 
+        const description = document.createElement('td');
+        barChart.appendChild(description);
+        for (let i = 0; i < this.data.length; i++) {
+            const stat = document.createElement('div');
+            stat.className = "stat"
+            stat.style.backgroundColor = this.data[i].color
+            stat.textContent = this.data[i].category
+            description.appendChild(stat)
         }
     },
 
@@ -163,6 +177,7 @@ BarChart.prototype = {
         const inputB = document.createElement('input');
         inputB.type = "number";
         inputB.placeholder = "value";
+        inputB.defaultValue = 1;
 
         const inputSubmit = document.createElement('input');
         inputSubmit.type = "submit";
@@ -177,7 +192,6 @@ BarChart.prototype = {
         barchart.prepend(formContainer)
 
         formContainer.addEventListener('submit', this.addToBarChart);
-
     },
 
     addToBarChart: function (e) {
@@ -209,16 +223,18 @@ BarChart.prototype = {
         deleteButton.style.backgroundColor = "red";
         deleteButton.style.padding = "0px"
         deleteButton.style.border = "0px"
-
+        deleteButton.id = e.target.id;
 
         let image = document.createElement('img');
         image.style.height = "15px";
         image.style.width = "15px";
-        image.src = "image/delete.jpg"
+        image.src = "image/delete.jpg";
+        image.id = e.target.id;
 
         e.target.prepend(deleteButton)
         deleteButton.appendChild(image)
-
+        deleteButton.addEventListener('click', BarChart.prototype.deletePress);
+        // image.addEventListener('click', BarChart.prototype.deletePress);
     },
 
     mouseLeaveBar: function (e) {
@@ -227,11 +243,17 @@ BarChart.prototype = {
     },
 
     deletePress: function (e) {
-        let buttom = document.getElementsByTagName("button")[0]
-        buttom.remove()
+        let parent = e.target.id[0]
+        let index = e.target.id[1]
+
+        let result = searchGraph(parseInt(parent))
+        e.path[2].remove()
+
+        result.data.splice(parseInt(index), 1);
+        result.colors.splice(parseInt(index), 1);
+
+        result.render();
     },
-
-
 }
 
 
@@ -252,24 +274,35 @@ function PieChart() {
 
     const body = document.querySelector('body')
 
-    const container = document.createElement('div');
+    const outer = document.createElement('div');
+    outer.className = 'PieChartOuter';
+    outer.id = this.ID;
+    outer.style = 'height: 400px;';
+
+    const container = document.createElement('table');
     container.className = 'PieChartContainer';
     container.id = this.ID;
-    container.style = 'height: 400px;';
 
     const PieChart = document.createElement('canvas');
     PieChart.className = 'PieChart';
     PieChart.id = this.ID;
 
-    const graphTitle = document.createElement('div');
+    const graphTitle = document.createElement('tr');
     graphTitle.className = 'graphTitle';
     graphTitle.id = this.ID;
 
-    container.appendChild(graphTitle);
-    container.appendChild(PieChart);
-    body.appendChild(container);
+    const graph = document.createElement('tr');
+    graph.className = 'graph';
+    graph.id = this.ID;
 
-    this.chart = container;
+    graph.appendChild(PieChart)
+
+    container.appendChild(graphTitle);
+    container.appendChild(graph);
+    outer.appendChild(container)
+    body.appendChild(outer);
+
+    this.chart = graph;
     this.canvas = PieChart;
     graphArray.push(this);
 
@@ -301,8 +334,12 @@ PieChart.prototype = {
     },
 
     render: function () {
+
+        this.clear();
         let sortedData = this.toRatio(this.data);
         const PieChart = document.getElementById(this.ID).getElementsByClassName("PieChart")[0].getContext("2d");
+
+        let sum = 0
 
         let position = 0;
         for (let i = 0; i < this.data.length; i++) {
@@ -315,7 +352,24 @@ PieChart.prototype = {
             PieChart.fill();
 
             position = position + degree;
+            sum += this.data[i].number;
         }
+
+
+        const description = document.createElement('td');
+        this.chart.appendChild(description);
+        for (let i = 0; i < this.data.length; i++) {
+            const stat = document.createElement('div');
+            stat.style.backgroundColor = this.data[i].color
+            stat.className = "stat"
+            stat.textContent = this.data[i].category + "  " + Math.floor(this.data[i].number/sum *100) + "%"
+            description.appendChild(stat);
+            stat.id = this.ID.toString(10) + i.toString(10);
+
+            stat.addEventListener('mouseenter', this.mouseOnBar);
+            stat.addEventListener('mouseleave', this.mouseLeaveBar);
+        }
+
     },
 
     sum: function () {
@@ -362,7 +416,6 @@ PieChart.prototype = {
         piechart.prepend(formContainer)
 
         formContainer.addEventListener('submit', this.addToPieChart);
-
     },
 
     addToPieChart: function (e) {
@@ -371,6 +424,7 @@ PieChart.prototype = {
         const value = e.target.getElementsByTagName("input")[1].value;
 
         let graph = searchGraph(parseInt(e.target.id))
+        graph.chart.childNodes[1].remove();
         graph.clear();
         graph.addData(parseFloat(value), category);
         graph.render();
@@ -380,8 +434,51 @@ PieChart.prototype = {
 
     clear: function () {
         const context = this.canvas.getContext('2d');
-
         context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        const statistic = document.getElementById(this.ID).getElementsByTagName("div")
+
+        let len = statistic.length
+        for (let i=0; i< len; i++) {
+            statistic[0].remove();
+        }
+    },
+
+    mouseOnBar: function (e) {
+        let deleteButton = document.createElement('button');
+        deleteButton.style.height = "15px";
+        deleteButton.style.width = "15px";
+        deleteButton.style.backgroundColor = "red";
+        deleteButton.style.padding = "0px"
+        deleteButton.style.border = "0px"
+        deleteButton.id = e.target.id;
+
+        let image = document.createElement('img');
+        image.style.height = "15px";
+        image.style.width = "15px";
+        image.src = "image/delete.jpg";
+        image.id = e.target.id;
+
+        e.target.appendChild(deleteButton)
+        deleteButton.appendChild(image)
+        deleteButton.addEventListener('click', PieChart.prototype.deletePress);
+    },
+
+    mouseLeaveBar: function (e) {
+        let buttom = document.getElementsByTagName("button")[0]
+        buttom.remove()
+    },
+
+    deletePress: function (e) {
+        let parent = e.target.id[0]
+        let index = e.target.id[1]
+
+        let result = searchGraph(parseInt(parent))
+        e.path[2].remove()
+
+        result.data.splice(parseInt(index), 1);
+        result.colors.splice(parseInt(index), 1);
+
+        result.render();
     },
 }
 
@@ -412,11 +509,11 @@ function LineChart() {
     lineChart.className = 'lineChart';
     lineChart.id = this.ID;
 
-    const graphTitle = document.createElement('div');
-    graphTitle.className = 'graphTitle';
-    graphTitle.id = this.ID;
+    // const graphTitle = document.createElement('div');
+    // graphTitle.className = 'graphTitle';
+    // graphTitle.id = this.ID;
 
-    container.appendChild(graphTitle);
+    // container.appendChild(graphTitle);
     container.appendChild(lineChart);
     body.appendChild(container);
 
@@ -433,6 +530,7 @@ LineChart.prototype = {
         for (i = 0; i < this.data.length; i++) {
             if ((this.data[i].x === x_value) && (this.data[i].y === y_value) || (this.data[i].x === x_value)) {
                 duplicate = true;
+                this.data[i].y = y_value;
                 break;
             }
         }
@@ -447,16 +545,49 @@ LineChart.prototype = {
     },
 
     render: function () {
+    
+        this.clear();
+
         let sortedData = this.sort();
         const lineChart = document.getElementById(this.ID).getElementsByClassName("lineChart")[0].getContext("2d");
         let ratio_x = this.ratio().ratio_x;
         let ratio_y = this.ratio().ratio_y;
 
+        const canvas = document.getElementById(this.ID)
+        const canvasHeight = parseInt(document.getElementById(this.ID).getElementsByClassName("lineChart")[0].height, 10);
         for (let i = 0; i < this.data.length - 1; i++) {
-            const canvasHeight = parseInt(document.getElementById(this.ID).getElementsByClassName("lineChart")[0].height, 10);
 
             let x = sortedData[i].x * ratio_x;
             let y = sortedData[i].y * ratio_y;
+
+            // const point = document.createElement('div');
+            // point.style.position = "relative"
+            // point.style.left = (sortedData[i].x * 47 - 10) + "px"
+            // point.style.top = ((canvasHeight - sortedData[i].y*23) - 175) + "px"
+            // point.style.width = "10px"
+            // point.style.height = "10px"
+            // point.style.backgroundColor = "red"
+            // canvas.appendChild(point)
+
+            const point = document.createElement('div');
+            point.style.position = "relative"
+
+            // point.style.left = (x * 1.7 - 8) + "px"
+            // point.style.top = ((-y)*2.45) + "px"
+
+            point.style.left = (x * 2.5 - 10) + "px"
+            point.style.top = ((canvasHeight - y * 2.4) - 170) + "px"
+
+            point.style.width = "10px"
+            point.style.height = "10px"
+            point.style.backgroundColor = "red"
+            point.style.borderRadius = "5px"
+            canvas.appendChild(point)
+
+            point.addEventListener('mouseenter', this.mouseOnBar);
+            point.addEventListener('mouseleave', this.mouseLeaveBar);
+            point.id = this.ID.toString(10) + i.toString(10)
+
 
             let xNext = sortedData[i + 1].x * ratio_x;
             let yNext = sortedData[i + 1].y * ratio_y;
@@ -467,6 +598,26 @@ LineChart.prototype = {
             lineChart.lineTo(xNext, canvasHeight - yNext);
             lineChart.stroke();
         }
+        if (this.data.length) {
+            let x = sortedData[this.data.length - 1].x * ratio_x;
+            let y = sortedData[this.data.length - 1].y * ratio_y;
+    
+            const point = document.createElement('div');
+            point.style.position = "relative"
+            point.style.left = (x * 2.6 - 10) + "px"
+            point.style.top = ((canvasHeight - y * 2.4) - 170) + "px"
+            point.style.width = "10px"
+            point.style.height = "10px"
+            point.style.backgroundColor = "red"
+            point.style.borderRadius = "5px"
+            point.id = this.ID.toString(10) + (this.data.length - 1).toString(10);
+            point.addEventListener('mouseenter', this.mouseOnBar);
+            point.addEventListener('mouseleave', this.mouseLeaveBar);
+            canvas.appendChild(point)
+        }
+       
+
+        console.log(this.data)
     },
 
     sort: function () {
@@ -550,19 +701,63 @@ LineChart.prototype = {
         const x_value = e.target.getElementsByTagName("input")[0].value;
         const y_value = e.target.getElementsByTagName("input")[1].value;
 
-
         let graph = searchGraph(parseInt(e.target.id))
         graph.clear();
         graph.addData(parseFloat(x_value), parseFloat(y_value));
         graph.render();
-
-
     },
 
 
     clear: function () {
         const context = this.canvas.getContext('2d');
-
         context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        const canvas = document.getElementById(this.ID).getElementsByTagName("div")
+
+        let len = canvas.length
+        for (let i = 0; i < len; i++) {
+            canvas[0].remove();
+        }
+    },
+
+    mouseOnBar: function (e) {
+        let deleteButton = document.createElement('button');
+        deleteButton.style.height = "15px";
+        deleteButton.style.width = "15px";
+        deleteButton.style.backgroundColor = "red";
+        deleteButton.style.padding = "0px"
+        deleteButton.style.border = "0px"
+        deleteButton.id = e.target.id;
+
+        let image = document.createElement('img');
+        image.style.height = "15px";
+        image.style.width = "15px";
+        image.src = "image/delete.jpg";
+        image.id = e.target.id;
+
+        e.target.prepend(deleteButton)
+        deleteButton.appendChild(image)
+        deleteButton.addEventListener('click', LineChart.prototype.deletePress);
+        // image.addEventListener('click', BarChart.prototype.deletePress);
+    },
+
+    mouseLeaveBar: function (e) {
+        let buttom = document.getElementsByTagName("button")[0]
+        buttom.remove()
+    },
+
+    deletePress: function (e) {
+        let parent = e.target.id[0]
+        let index = e.target.id[1]
+
+        let result = searchGraph(parseInt(parent))
+        e.path[2].remove()
+        result.data.splice(parseInt(index), 1);
+        result.render();
     },
 }
+
+global.LineChart = global.LineChart || LineChart
+global.PieChart = global.PieChart || PieChart
+global.BarChart = global.BarChart || BarChart
+
+})(window, window.document);

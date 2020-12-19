@@ -12,10 +12,12 @@ table {
 
 tr {
     border: 1px solid black;
+    
 }
 
 .dataBar {
     width: 80%;
+    max-width: 50px;
     
 }
 
@@ -37,6 +39,7 @@ td {
     /* border: 5px solid rgb(172, 23, 55); */
     border-radius: 15px 50px 30px 5px;
     margin: 30px;
+    
 }
 
 
@@ -46,12 +49,16 @@ td {
     background-color: white;
     width: 50%;
     border: 5px solid black;
-    margin: 30px;
+    /* margin-bottom: 30px; */
 }
 
 .PieChart {
     width: 100%;
     height: 95%;
+}
+
+.PieChartOuter{
+    margin-bottom: 40px;
 }
 
 
@@ -67,4 +74,10 @@ td {
 .lineChart {
     width: 100%;
     height: 90%;
+}
+
+
+.stat{
+    max-width: 100px;
+    border-radius: 50%;
 }
