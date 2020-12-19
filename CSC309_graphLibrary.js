@@ -509,12 +509,16 @@ function LineChart() {
     lineChart.className = 'lineChart';
     lineChart.id = this.ID;
 
-    // const graphTitle = document.createElement('div');
-    // graphTitle.className = 'graphTitle';
-    // graphTitle.id = this.ID;
+    const canvasContainer = document.createElement('div');
+    canvasContainer.className = "canvasContainer"
+    canvasContainer.id = this.ID;
 
-    // container.appendChild(graphTitle);
+  
+    // canvasContainer.appendChild(lineChart)
+    // container.appendChild(canvasContainer);
+
     container.appendChild(lineChart);
+
     body.appendChild(container);
 
     this.chart = container;
@@ -545,6 +549,7 @@ LineChart.prototype = {
     },
 
     render: function () {
+        console.log(document.getElementById(this.ID))
     
         this.clear();
 
@@ -722,8 +727,8 @@ LineChart.prototype = {
     mouseOnBar: function (e) {
         let deleteButton = document.createElement('button');
         deleteButton.style.height = "15px";
-        deleteButton.style.width = "15px";
-        deleteButton.style.backgroundColor = "red";
+        deleteButton.style.width = "100px";
+        deleteButton.style.backgroundColor = "transparent";
         deleteButton.style.padding = "0px"
         deleteButton.style.border = "0px"
         deleteButton.id = e.target.id;
@@ -731,6 +736,7 @@ LineChart.prototype = {
         let image = document.createElement('img');
         image.style.height = "15px";
         image.style.width = "15px";
+        image.style.paddingLeft = "0px";
         image.src = "image/delete.jpg";
         image.id = e.target.id;
 
@@ -738,6 +744,18 @@ LineChart.prototype = {
         deleteButton.appendChild(image)
         deleteButton.addEventListener('click', LineChart.prototype.deletePress);
         // image.addEventListener('click', BarChart.prototype.deletePress);
+
+        let parent = e.target.id[0]
+        let index = e.target.id[1]
+
+        let result = searchGraph(parseInt(parent))
+        let targetdata = result.data[parseInt(index)]
+
+        let display = document.createElement('div');
+        display.textContent = "(x: "+targetdata.x +", "+"y: "+ targetdata.y + ")"
+        display.style.color = "red"
+
+        deleteButton.appendChild(display)
     },
 
     mouseLeaveBar: function (e) {
