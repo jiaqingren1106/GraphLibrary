@@ -40,9 +40,9 @@ graphB.render();
 
 
 
-const div = document.createElement("div")
-div.textContent = "click on one of the stats bar on the right of the graph to delete a pie."
-body.appendChild(div)
+const div1 = document.createElement("div")
+div1.textContent = "click on one of the stats bar on the right of the graph to delete a pie."
+body.appendChild(div1)
 
 
 // Pie Chart demonstration
@@ -61,9 +61,9 @@ pieGraph.render();
 
 
 
-const div = document.createElement("div")
-div.textContent = "click on a point to perform deletion."
-body.appendChild(div)
+const div2 = document.createElement("div")
+div2.textContent = "click on a point to perform deletion."
+body.appendChild(div2)
 
 // line Chart demonstration
 const lineGraphA = new LineChart()
