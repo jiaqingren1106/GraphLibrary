@@ -28,6 +28,14 @@ app.get('/', (req, res) => {
 	res.sendFile(__dirname + "/pub/examples.html");
 })
 
+app.get('/documentation', (req, res) => {
+	// sending a string
+	//res.send('This should be the root route!')
+
+	//sending some HTML
+	res.sendFile(__dirname + "/pub/documentation.html");
+})
+
 
 // will use an 'environmental variable', process.env.PORT, for deployment.
 const port = process.env.PORT || 5000

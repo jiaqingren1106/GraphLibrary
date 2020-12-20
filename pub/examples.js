@@ -2,6 +2,9 @@
 const body = document.querySelector("body")
 
 
+const div = document.createElement("div")
+div.textContent = "click on one of the bars of the graph to perform deletion."
+body.appendChild(div)
 // BarChart demonstration
 const graph = new BarChart()
 graph.addForm();
@@ -19,14 +22,7 @@ graph.render();
 
 
 
-// const body = document.querySelector('body')
-// const div = document.createElement("div")
-// div.style.height = "300px";
-// div.style.width = "300px";
-// div.style.backgroundColor = "aqua";
-// div.style.border = "10px solid black";
-// div.style.margin = "10px";
-// body.appendChild(div)
+
 
 
 
@@ -42,6 +38,11 @@ graphB.render();
 
 
 
+
+
+const div = document.createElement("div")
+div.textContent = "click on one of the stats bar on the right of the graph to delete a pie."
+body.appendChild(div)
 
 
 // Pie Chart demonstration
@@ -60,7 +61,9 @@ pieGraph.render();
 
 
 
-
+const div = document.createElement("div")
+div.textContent = "click on a point to perform deletion."
+body.appendChild(div)
 
 // line Chart demonstration
 const lineGraphA = new LineChart()
