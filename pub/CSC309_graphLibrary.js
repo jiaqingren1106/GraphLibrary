@@ -200,6 +200,11 @@ BarChart.prototype = {
         const category = e.target.getElementsByTagName("input")[0].value;
         const value = e.target.getElementsByTagName("input")[1].value;
 
+        if (isNaN(parseFloat(value))) {
+            alert("not a number")
+            return;
+        }
+
         let graph = searchGraph(parseInt(e.target.id))
         graph.clear();
         graph.addData(parseFloat(value), category);
@@ -225,10 +230,16 @@ BarChart.prototype = {
         deleteButton.style.border = "0px"
         deleteButton.id = e.target.id;
 
-        let image = document.createElement('img');
+        // let image = document.createElement('img');
+        // image.style.height = "15px";
+        // image.style.width = "15px";
+        // image.src = "image/delete.jpg";
+        // image.id = e.target.id;
+
+        let image = document.createElement('div');
         image.style.height = "15px";
         image.style.width = "15px";
-        image.src = "image/delete.jpg";
+        image.style.backgroundColor = "red"
         image.id = e.target.id;
 
         e.target.prepend(deleteButton)
@@ -423,6 +434,11 @@ PieChart.prototype = {
         const category = e.target.getElementsByTagName("input")[0].value;
         const value = e.target.getElementsByTagName("input")[1].value;
 
+        if (isNaN(parseFloat(value))) {
+            alert("not a number")
+            return;
+        }
+
         let graph = searchGraph(parseInt(e.target.id))
         graph.chart.childNodes[1].remove();
         graph.clear();
@@ -452,10 +468,16 @@ PieChart.prototype = {
         deleteButton.style.border = "0px"
         deleteButton.id = e.target.id;
 
-        let image = document.createElement('img');
+        // let image = document.createElement('img');
+        // image.style.height = "15px";
+        // image.style.width = "15px";
+        // image.src = "image/delete.jpg";
+        // image.id = e.target.id;
+
+        let image = document.createElement('div');
         image.style.height = "15px";
         image.style.width = "15px";
-        image.src = "image/delete.jpg";
+        image.style.backgroundColor = "red"
         image.id = e.target.id;
 
         e.target.appendChild(deleteButton)
@@ -703,8 +725,13 @@ LineChart.prototype = {
 
         let graph = searchGraph(parseInt(e.target.id))
         graph.clear();
-        graph.addData(parseFloat(x_value), parseFloat(y_value));
-        graph.render();
+        if (isNaN(parseFloat(x_value)) || isNaN(parseFloat(y_value))) {
+            alert("not a number");
+            graph.render();
+        } else {
+            graph.addData(parseFloat(x_value), parseFloat(y_value));
+            graph.render();
+        }
     },
 
 
@@ -728,11 +755,17 @@ LineChart.prototype = {
         deleteButton.style.border = "0px"
         deleteButton.id = e.target.id;
 
-        let image = document.createElement('img');
+        // let image = document.createElement('img');
+        // image.style.height = "15px";
+        // image.style.width = "15px";
+        // image.style.paddingLeft = "0px";
+        // image.src = "image/delete.jpg";
+        // image.id = e.target.id;
+
+        let image = document.createElement('div');
         image.style.height = "15px";
         image.style.width = "15px";
-        image.style.paddingLeft = "0px";
-        image.src = "image/delete.jpg";
+        image.style.backgroundColor = "red"
         image.id = e.target.id;
 
         e.target.prepend(deleteButton)
